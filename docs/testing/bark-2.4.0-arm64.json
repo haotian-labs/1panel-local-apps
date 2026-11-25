@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-25T05:02:47.692909+00:00",
+  "version": "2.4.0",
+  "checks": [
+    "Packaged Compose starts; ping, healthz, root and actual image version match",
+    "Device registration writes to relative Bbolt mount",
+    "Registration survives restart",
+    "Registration survives removal and recreation",
+    "Stop/start preserves data",
+    "Basic Auth, special-character password, upstream public endpoints and push rejection",
+    "Concurrent instances have independent databases",
+    "Offline database migration to a new installation directory",
+    "External MySQL schema, registration, actual row and app recreation"
+  ],
+  "limitations": [
+    "No real APNs delivery",
+    "No actual 1Panel install/upgrade"
+  ],
+  "test_overrides": "Loopback-only ports; dedicated external network name; temporary instance names and credentials.",
+  "docker": {
+    "version": "29.8.2",
+    "architecture": "aarch64"
+  },
+  "image_info": {
+    "commit": "a365aa9ddc9362495efffb3db4358b7c12beb963",
+    "devices": 0,
+    "version": "v2.4.0",
+    "build": "2026-11-06 01:39:21",
+    "arch": "linux/arm64"
+  },
+  "status": "passed",
+  "cleanup_passed": true,
+  "command": "python scripts/smoke_bark.py --mysql"
+}

@@ -1,0 +1,123 @@
+name: Validate and release
+
+on:
+  pull_request:
+    paths:
+      - 'apps/**'
+      - 'specs/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'requirements.txt'
+      - '.github/workflows/**'
+  push:
+    branches: [main]
+    tags: ['*-r*']
+    paths:
+      - 'apps/**'
+      - 'specs/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'requirements.txt'
+      - '.github/workflows/**'
+  workflow_dispatch:
+    inputs:
+      mysql:
+        description: Also test optional external MySQL
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: appstore-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python scripts/validate.py --compose
+      - run: python -m unittest discover -s tests -v
+
+  smoke:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - name: Test Bark in temporary containers
+        env:
+          TEST_MYSQL: ${{ startsWith(github.ref, 'refs/tags/') || inputs.mysql == true }}
+          RELEASE_REF: ${{ github.ref }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import subprocess
+          import sys
+          sys.path.insert(0, 'scripts')
+          from appstore import select_tag
+          command = [sys.executable, 'scripts/smoke_bark.py']
+          if os.environ['RELEASE_REF'].startswith('refs/tags/'):
+              app, version = select_tag(os.environ['RELEASE_TAG'])
+              if app.name != 'bark':
+                  raise SystemExit('Add a smoke test for this application before publishing it.')
+              command += ['--version', version.name]
+          if os.environ['TEST_MYSQL'] == 'true':
+              command.append('--mysql')
+          subprocess.run(command, check=True)
+          PY
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: bark-docker-test
+          path: work/docker-bark.json
+          if-no-files-found: warn
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [validate, smoke]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - name: Build tagged package
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: python scripts/package.py --tag "$RELEASE_TAG"
+      - name: Prepare release notes
+        run: |
+          mkdir -p work
+          cat > work/release-notes.md <<'EOF'
+          1Panel local application package. Extract the ZIP under your server's
+          `1panel/resource/apps/local` directory, then refresh local applications.
+
+          Application resource updates do not upgrade installed instances.
+          Review the app documentation and migration notes before replacing an installation.
+          SHA256 checksums are included alongside the ZIP.
+          EOF
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" dist/*.zip dist/*.sha256 --verify-tag --title "$RELEASE_TAG" --notes-file work/release-notes.md

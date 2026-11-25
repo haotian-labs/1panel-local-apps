@@ -1,0 +1,242 @@
+{
+  "key": "bark",
+  "name": "Bark",
+  "title": "Bark",
+  "version": "2.4.0",
+  "description": {
+    "en": "Self-hosted notification server for Bark",
+    "es-es": "Self-hosted notification server for Bark",
+    "ja": "Self-hosted notification server for Bark",
+    "ms": "Self-hosted notification server for Bark",
+    "pt-br": "Self-hosted notification server for Bark",
+    "ru": "Self-hosted notification server for Bark",
+    "ko": "Self-hosted notification server for Bark",
+    "zh-Hant": "Bark 自託管通知推播服務",
+    "zh": "Bark 自托管通知推送服务",
+    "tr": "Self-hosted notification server for Bark"
+  },
+  "type": "website",
+  "tags": [
+    "Tool",
+    "Local"
+  ],
+  "crossVersionUpdate": true,
+  "limit": 0,
+  "website": "https://bark.day.app/",
+  "github": "https://github.com/Finb/bark-server",
+  "document": "https://bark.day.app/",
+  "architectures": [
+    "amd64",
+    "arm",
+    "arm64"
+  ],
+  "logo": "apps/bark/logo.png",
+  "source_evidence": [
+    "https://github.com/Finb/bark-server/blob/v2.4.0/README.md",
+    "https://github.com/Finb/bark-server/blob/v2.4.0/deploy/docker-compose.yaml",
+    "https://github.com/Finb/bark-server/blob/v2.4.0/deploy/Dockerfile",
+    "https://github.com/Finb/bark-server/blob/v2.4.0/deploy/entrypoint.sh",
+    "https://github.com/Finb/bark-server/blob/v2.4.0/main.go",
+    "https://github.com/Finb/bark-server/blob/v2.4.0/route_auth.go",
+    "https://github.com/Finb/bark-server/blob/v2.4.0/route_register.go",
+    "https://github.com/Finb/bark-server/blob/v2.4.0/database/bbolt.go",
+    "https://github.com/Finb/bark-server/blob/v2.4.0/database/mysql.go"
+  ],
+  "notes": [
+    "Keep application version 2.4.0; this is a packaging correction, not an upstream upgrade.",
+    "Docker Hub index verified: sha256:f3fa583422f9e870cec2c619d714946f549fbf7fd2c822da4a4ef43893ed3159; linux/amd64, linux/arm64, linux/arm/v7.",
+    "Official Alpine runtime has no USER override; retain default runtime user and entrypoint. No host chown hook is required.",
+    "No automatic migration from legacy BARK_ROOT_PATH: stop the old application and copy its /data contents to the new installation data directory.",
+    "App-specific translations use English fallback outside Chinese; common Port labels reuse the skill translations.",
+    "Basic Auth deliberately excludes paths starting with /ping, /register, /healthz in upstream v2.4.0; missing/invalid credentials return HTTP 418.",
+    "DSN blank selects Bbolt. External MySQL is optional and not bundled. No need for host initialization or uninstall hooks."
+  ],
+  "readme": {
+    "zh": {
+      "introduction": "是 Bark iOS 客户端的自托管推送服务端，可通过 HTTP 接口向自己的 iPhone 发送自定义通知。",
+      "features": [
+        {
+          "title": "自定义推送",
+          "description": "支持通过 HTTP GET、POST 和 JSON 请求发送通知。"
+        },
+        {
+          "title": "数据存储",
+          "description": "默认使用本地 Bbolt 数据库，也支持连接外部 MySQL。"
+        },
+        {
+          "title": "访问认证",
+          "description": "支持可选的 HTTP Basic Auth；上游允许健康检查和设备注册接口免认证访问。"
+        }
+      ]
+    },
+    "en": {
+      "introduction": "is the self-hosted push server for the Bark iOS app. Send custom notifications to your iPhone through HTTP requests.",
+      "features": [
+        {
+          "title": "Custom notifications",
+          "description": "Send notifications using HTTP GET, POST, or JSON requests."
+        },
+        {
+          "title": "Storage",
+          "description": "Uses local Bbolt storage by default, with optional external MySQL support."
+        },
+        {
+          "title": "Authentication",
+          "description": "Supports optional HTTP Basic Auth; upstream exempts health checks and device registration from authentication."
+        }
+      ]
+    }
+  },
+  "form_fields": [
+    {
+      "default": 8080,
+      "edit": true,
+      "envKey": "PANEL_APP_PORT_HTTP",
+      "label": {
+        "en": "Port",
+        "es-es": "Puerto",
+        "ja": "ポート",
+        "ms": "Port",
+        "pt-br": "Porta",
+        "ru": "Порт",
+        "ko": "포트",
+        "zh-Hant": "埠",
+        "zh": "端口",
+        "tr": "Bağlantı Noktası"
+      },
+      "required": true,
+      "rule": "paramPort",
+      "type": "number"
+    },
+    {
+      "default": "",
+      "edit": true,
+      "envKey": "BARK_SERVER_DSN",
+      "labelEn": "MySQL DSN (optional)",
+      "labelZh": "MySQL DSN（可选）",
+      "label": {
+        "en": "MySQL DSN (optional)",
+        "es-es": "MySQL DSN (optional)",
+        "ja": "MySQL DSN (optional)",
+        "ms": "MySQL DSN (optional)",
+        "pt-br": "MySQL DSN (optional)",
+        "ru": "MySQL DSN (optional)",
+        "ko": "MySQL DSN (optional)",
+        "zh-Hant": "MySQL DSN（可选）",
+        "zh": "MySQL DSN（可选）",
+        "tr": "MySQL DSN (optional)"
+      },
+      "description": {
+        "en": "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container.",
+        "es-es": "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container.",
+        "ja": "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container.",
+        "ms": "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container.",
+        "pt-br": "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container.",
+        "ru": "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container.",
+        "ko": "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container.",
+        "zh-Hant": "留空使用本地 Bbolt。示例：bark:password@tcp(mysql:3306)/bark。须预先创建数据库；mysql 应替换为可达的数据库服务名或地址，其他容器不能使用 127.0.0.1。",
+        "zh": "留空使用本地 Bbolt。示例：bark:password@tcp(mysql:3306)/bark。须预先创建数据库；mysql 应替换为可达的数据库服务名或地址，其他容器不能使用 127.0.0.1。",
+        "tr": "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container."
+      },
+      "required": false,
+      "type": "password"
+    },
+    {
+      "default": "",
+      "edit": true,
+      "envKey": "BARK_SERVER_BASIC_AUTH_USER",
+      "labelEn": "Basic Auth username (optional)",
+      "labelZh": "Basic Auth 用户名（可选）",
+      "label": {
+        "en": "Basic Auth username (optional)",
+        "es-es": "Basic Auth username (optional)",
+        "ja": "Basic Auth username (optional)",
+        "ms": "Basic Auth username (optional)",
+        "pt-br": "Basic Auth username (optional)",
+        "ru": "Basic Auth username (optional)",
+        "ko": "Basic Auth username (optional)",
+        "zh-Hant": "Basic Auth 用户名（可选）",
+        "zh": "Basic Auth 用户名（可选）",
+        "tr": "Basic Auth username (optional)"
+      },
+      "description": {
+        "en": "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes.",
+        "es-es": "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes.",
+        "ja": "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes.",
+        "ms": "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes.",
+        "pt-br": "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes.",
+        "ru": "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes.",
+        "ko": "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes.",
+        "zh-Hant": "用户名和密码请同时填写，或同时留空关闭认证。上游对 /ping、/register、/healthz 路径前缀免认证。",
+        "zh": "用户名和密码请同时填写，或同时留空关闭认证。上游对 /ping、/register、/healthz 路径前缀免认证。",
+        "tr": "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes."
+      },
+      "required": false,
+      "type": "text"
+    },
+    {
+      "default": "",
+      "edit": true,
+      "envKey": "BARK_SERVER_BASIC_AUTH_PASSWORD",
+      "labelEn": "Basic Auth password (optional)",
+      "labelZh": "Basic Auth 密码（可选）",
+      "label": {
+        "en": "Basic Auth password (optional)",
+        "es-es": "Basic Auth password (optional)",
+        "ja": "Basic Auth password (optional)",
+        "ms": "Basic Auth password (optional)",
+        "pt-br": "Basic Auth password (optional)",
+        "ru": "Basic Auth password (optional)",
+        "ko": "Basic Auth password (optional)",
+        "zh-Hant": "Basic Auth 密码（可选）",
+        "zh": "Basic Auth 密码（可选）",
+        "tr": "Basic Auth password (optional)"
+      },
+      "description": {
+        "en": "Set together with the username. Use HTTPS when exposing this service outside a trusted network.",
+        "es-es": "Set together with the username. Use HTTPS when exposing this service outside a trusted network.",
+        "ja": "Set together with the username. Use HTTPS when exposing this service outside a trusted network.",
+        "ms": "Set together with the username. Use HTTPS when exposing this service outside a trusted network.",
+        "pt-br": "Set together with the username. Use HTTPS when exposing this service outside a trusted network.",
+        "ru": "Set together with the username. Use HTTPS when exposing this service outside a trusted network.",
+        "ko": "Set together with the username. Use HTTPS when exposing this service outside a trusted network.",
+        "zh-Hant": "请与用户名同时填写。对外访问时请通过 HTTPS 使用。",
+        "zh": "请与用户名同时填写。对外访问时请通过 HTTPS 使用。",
+        "tr": "Set together with the username. Use HTTPS when exposing this service outside a trusted network."
+      },
+      "required": false,
+      "type": "password"
+    }
+  ],
+  "services": [
+    {
+      "name": "bark",
+      "primary": true,
+      "image": "finab/bark-server:v2.4.0",
+      "ports": [
+        {
+          "host_env": "PANEL_APP_PORT_HTTP",
+          "host_default": 8080,
+          "container": 8080,
+          "label": "Port"
+        }
+      ],
+      "volumes": [
+        "./data:/data"
+      ],
+      "environment": {
+        "BARK_SERVER_ADDRESS": "0.0.0.0:8080",
+        "BARK_SERVER_DATA_DIR": "/data",
+        "BARK_SERVER_URL_PREFIX": "/",
+        "BARK_SERVER_SERVERLESS": "false",
+        "BARK_SERVER_DSN": "${BARK_SERVER_DSN}",
+        "BARK_SERVER_BASIC_AUTH_USER": "${BARK_SERVER_BASIC_AUTH_USER}",
+        "BARK_SERVER_BASIC_AUTH_PASSWORD": "${BARK_SERVER_BASIC_AUTH_PASSWORD}"
+      }
+    }
+  ],
+  "package_revision": 1,
+  "tested_platforms": [
+    "linux/arm64"
+  ]
+}

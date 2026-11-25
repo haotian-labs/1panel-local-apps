@@ -1,0 +1,35 @@
+name: Bark
+tags:
+  - Tool
+  - Local
+title: Bark
+description: "Bark 自托管通知推送服务"
+additionalProperties:
+  key: bark
+  name: Bark
+  tags:
+    - Tool
+    - Local
+  shortDescZh: "Bark 自托管通知推送服务"
+  shortDescEn: "Self-hosted notification server for Bark"
+  description:
+    en: "Self-hosted notification server for Bark"
+    es-es: "Self-hosted notification server for Bark"
+    ja: "Self-hosted notification server for Bark"
+    ms: "Self-hosted notification server for Bark"
+    pt-br: "Self-hosted notification server for Bark"
+    ru: "Self-hosted notification server for Bark"
+    ko: "Self-hosted notification server for Bark"
+    zh-Hant: "Bark 自託管通知推播服務"
+    zh: "Bark 自托管通知推送服务"
+    tr: "Self-hosted notification server for Bark"
+  type: website
+  crossVersionUpdate: true
+  limit: 0
+  architectures:
+    - amd64
+    - arm
+    - arm64
+  website: https://bark.day.app/
+  github: https://github.com/Finb/bark-server
+  document: https://bark.day.app/

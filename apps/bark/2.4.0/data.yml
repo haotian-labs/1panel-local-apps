@@ -1,0 +1,108 @@
+additionalProperties:
+  formFields:
+    - default: 8080
+      edit: true
+      envKey: PANEL_APP_PORT_HTTP
+      label:
+        en: Port
+        es-es: Puerto
+        ja: "ポート"
+        ms: Port
+        pt-br: Porta
+        ru: "Порт"
+        ko: "포트"
+        zh-Hant: "埠"
+        zh: "端口"
+        tr: "Bağlantı Noktası"
+      required: true
+      rule: paramPort
+      type: number
+      labelEn: Port
+      labelZh: "端口"
+    - default: ""
+      edit: true
+      envKey: BARK_SERVER_DSN
+      labelEn: "MySQL DSN (optional)"
+      labelZh: "MySQL DSN（可选）"
+      label:
+        en: "MySQL DSN (optional)"
+        es-es: "MySQL DSN (optional)"
+        ja: "MySQL DSN (optional)"
+        ms: "MySQL DSN (optional)"
+        pt-br: "MySQL DSN (optional)"
+        ru: "MySQL DSN (optional)"
+        ko: "MySQL DSN (optional)"
+        zh-Hant: "MySQL DSN（可选）"
+        zh: "MySQL DSN（可选）"
+        tr: "MySQL DSN (optional)"
+      description:
+        en: "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container."
+        es-es: "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container."
+        ja: "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container."
+        ms: "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container."
+        pt-br: "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container."
+        ru: "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container."
+        ko: "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container."
+        zh-Hant: "留空使用本地 Bbolt。示例：bark:password@tcp(mysql:3306)/bark。须预先创建数据库；mysql 应替换为可达的数据库服务名或地址，其他容器不能使用 127.0.0.1。"
+        zh: "留空使用本地 Bbolt。示例：bark:password@tcp(mysql:3306)/bark。须预先创建数据库；mysql 应替换为可达的数据库服务名或地址，其他容器不能使用 127.0.0.1。"
+        tr: "Leave blank for local Bbolt storage. Example: bark:password@tcp(mysql:3306)/bark. Create the database first; use a reachable database host, not 127.0.0.1 for another container."
+      required: false
+      type: password
+    - default: ""
+      edit: true
+      envKey: BARK_SERVER_BASIC_AUTH_USER
+      labelEn: "Basic Auth username (optional)"
+      labelZh: "Basic Auth 用户名（可选）"
+      label:
+        en: "Basic Auth username (optional)"
+        es-es: "Basic Auth username (optional)"
+        ja: "Basic Auth username (optional)"
+        ms: "Basic Auth username (optional)"
+        pt-br: "Basic Auth username (optional)"
+        ru: "Basic Auth username (optional)"
+        ko: "Basic Auth username (optional)"
+        zh-Hant: "Basic Auth 用户名（可选）"
+        zh: "Basic Auth 用户名（可选）"
+        tr: "Basic Auth username (optional)"
+      description:
+        en: "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes."
+        es-es: "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes."
+        ja: "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes."
+        ms: "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes."
+        pt-br: "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes."
+        ru: "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes."
+        ko: "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes."
+        zh-Hant: "用户名和密码请同时填写，或同时留空关闭认证。上游对 /ping、/register、/healthz 路径前缀免认证。"
+        zh: "用户名和密码请同时填写，或同时留空关闭认证。上游对 /ping、/register、/healthz 路径前缀免认证。"
+        tr: "Set username and password together, or leave both blank to disable Basic Auth. Upstream exempts /ping, /register and /healthz path prefixes."
+      required: false
+      type: text
+    - default: ""
+      edit: true
+      envKey: BARK_SERVER_BASIC_AUTH_PASSWORD
+      labelEn: "Basic Auth password (optional)"
+      labelZh: "Basic Auth 密码（可选）"
+      label:
+        en: "Basic Auth password (optional)"
+        es-es: "Basic Auth password (optional)"
+        ja: "Basic Auth password (optional)"
+        ms: "Basic Auth password (optional)"
+        pt-br: "Basic Auth password (optional)"
+        ru: "Basic Auth password (optional)"
+        ko: "Basic Auth password (optional)"
+        zh-Hant: "Basic Auth 密码（可选）"
+        zh: "Basic Auth 密码（可选）"
+        tr: "Basic Auth password (optional)"
+      description:
+        en: "Set together with the username. Use HTTPS when exposing this service outside a trusted network."
+        es-es: "Set together with the username. Use HTTPS when exposing this service outside a trusted network."
+        ja: "Set together with the username. Use HTTPS when exposing this service outside a trusted network."
+        ms: "Set together with the username. Use HTTPS when exposing this service outside a trusted network."
+        pt-br: "Set together with the username. Use HTTPS when exposing this service outside a trusted network."
+        ru: "Set together with the username. Use HTTPS when exposing this service outside a trusted network."
+        ko: "Set together with the username. Use HTTPS when exposing this service outside a trusted network."
+        zh-Hant: "请与用户名同时填写。对外访问时请通过 HTTPS 使用。"
+        zh: "请与用户名同时填写。对外访问时请通过 HTTPS 使用。"
+        tr: "Set together with the username. Use HTTPS when exposing this service outside a trusted network."
+      required: false
+      type: password
