@@ -24,6 +24,8 @@ python -m unittest discover -s tests -v
 python scripts/smoke_bark.py --mysql
 ```
 
+Docker 已运行时，可以用 `RUN_DOCKER_PERMISSION_TEST=1 python -m unittest discover -s tests -v` 增加 Linux 文件权限回归。该测试在 Docker 原生数据卷中创建 root 所有、`0600` 的模拟数据库，验证普通用户不可读、离线复制成功且权限保持不变；CI 默认执行此检查。
+
 校验器会解析 YAML、拒绝重复键，检查主要格式、字段、默认凭据、镜像与规格一致性、持久化目录、脚本格式及语法。它不是完整的 1Panel schema 或安全审计，不能验证官方来源真实性或镜像架构，也不能替代实际安装和升级测试。
 
 容器测试覆盖本机架构；发布时区分“镜像清单支持”和“实际运行通过”。仅修改文档时检查链接和命令即可。

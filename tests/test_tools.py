@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 import appstore
 from package import build
 from sync import synchronize
+from smoke_bark import copy_stopped_data
 
 
 class ToolsTest(unittest.TestCase):
@@ -157,6 +158,19 @@ class ToolsTest(unittest.TestCase):
             with self.assertRaises(OSError):
                 synchronize(self.app, self.target, True, self.root)
         self.assertEqual((dest / 'old').read_text(), 'original')
+
+
+class MigrationTest(unittest.TestCase):
+    def test_relative_migration_paths_fail_before_docker_is_called(self):
+        with mock.patch('smoke_bark.run') as run:
+            with self.assertRaises(ValueError):
+                copy_stopped_data(Path('data'), Path('/destination-data'), 'finab/bark-server:v2.4.0')
+        run.assert_not_called()
+
+    def test_copy_failure_is_propagated(self):
+        with mock.patch('smoke_bark.run', side_effect=RuntimeError('copy failed')):
+            with self.assertRaisesRegex(RuntimeError, 'copy failed'):
+                copy_stopped_data(Path('/source-data'), Path('/destination-data'), 'finab/bark-server:v2.4.0')
 
 
 if __name__ == '__main__':

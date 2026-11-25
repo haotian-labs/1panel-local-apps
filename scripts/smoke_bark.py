@@ -15,7 +15,7 @@ import time
 import urllib.error
 import urllib.request
 
-from appstore import ROOT, app_path, require_valid, selected_version
+from appstore import ROOT, app_path, load_yaml, require_valid, selected_version
 
 
 def run(args, *, check=True, timeout=90):
@@ -31,6 +31,24 @@ def port():
         return s.getsockname()[1]
 
 
+def copy_stopped_data(source: Path, destination: Path, image: str):
+    """Copy offline data as container root, retaining the original UID and mode.
+
+    Upstream opens bark.db with mode 0600:
+    https://github.com/Finb/bark-server/blob/v2.4.0/database/bbolt.go
+    A native Linux runner cannot read this root-owned file using shutil.
+    Both application containers must be stopped before calling this helper.
+    Paths refer to the Docker daemon's filesystem and must be absolute.
+    """
+    if not source.is_absolute() or not destination.is_absolute():
+        raise ValueError('offline migration requires absolute mount paths')
+    run(['docker', 'run', '--rm', '--network', 'none', '--user', '0:0',
+         '--entrypoint', '/bin/sh',
+         '--mount', f'type=bind,source={source},target=/source,readonly',
+         '--mount', f'type=bind,source={destination},target=/target',
+         image, '-ec', 'cp -a /source/. /target/'])
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--version', default='2.4.0')
@@ -40,6 +58,7 @@ def main():
     app = app_path('bark')
     require_valid(app)
     source = selected_version(app, args.version)
+    image = load_yaml(source / 'docker-compose.yml')['services']['bark']['image']
     work = ROOT / 'work'
     work.mkdir(exist_ok=True)
     temporary = tempfile.TemporaryDirectory(prefix='bark-smoke-', dir=work)
@@ -156,7 +175,7 @@ def main():
         compose(p, 'stop')
         migrated = create('migrated')
         compose(migrated, 'stop')
-        shutil.copytree(p['dir'] / 'data', migrated['dir'] / 'data', dirs_exist_ok=True)
+        copy_stopped_data(p['dir'] / 'data', migrated['dir'] / 'data', image)
         compose(migrated, 'start')
         ready(migrated)
         assert request(migrated, '/register/' + key)[0] == 200
